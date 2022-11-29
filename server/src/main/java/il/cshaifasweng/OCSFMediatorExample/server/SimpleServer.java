@@ -6,7 +6,9 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+
 
 public class SimpleServer extends AbstractServer {
 	private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
@@ -49,17 +51,69 @@ public class SimpleServer extends AbstractServer {
 			}
 			else if(request.startsWith("send Submitters IDs")){
 				//add code here to send submitters IDs to client
+				message.setMessage("207340514, 318582095");
+				client.sendToClient(message);
 			}
 			else if (request.startsWith("send Submitters")){
 				//add code here to send submitters names to client
+				message.setMessage("Baseem Salem, Ehab Mansour");
+				client.sendToClient(message);
 			}
 			else if (request.equals("what day it is?")) {
 				//add code here to send the date to client
+				message.setMessage(LocalDate.now().toString());
+				client.sendToClient(message);
 			}
 			else if (request.startsWith("add")){
 				//add code here to sum 2 numbers received in the message and send result back to client
 				//(use substring method as shown above)
 				//message format: "add n+m"
+				int b = 0;
+				String exp = request.toString();
+				char[] arr = new char[exp.length()];
+				String[] numbers = new String[2];
+				exp.getChars(0,exp.length(),arr,0);
+				String sum;
+				int flag = 1;
+				int firstIndex = 0;
+				int lastIndex = 0;
+				int counter = 0;
+				for(int i = 0; i < exp.length(); i++)
+				{
+					if((arr[i] != 'a') && (arr[i] != 'd') && (arr[i] != ' '))
+					{
+						if(flag == 1)
+						{
+							firstIndex = i;
+							lastIndex = i;
+							flag = 0;
+						}
+						else if((arr[i] != '+'))
+							lastIndex = i;
+						if(i == exp.length() - 1)
+						{
+							numbers[counter] = putNumbers(arr,firstIndex,lastIndex);
+							counter++;
+							firstIndex = 0;
+							lastIndex = 0;
+							flag = 1;
+						}
+						else if(i < exp.length() - 1)
+						{
+							if(arr[i] == '+')
+							{
+								numbers[counter] = putNumbers(arr,firstIndex,lastIndex);
+								counter++;
+								firstIndex = 0;
+								lastIndex = 0;
+								flag = 1;
+							}
+						}
+					}
+				}
+				sum = String.valueOf(Integer.parseInt(numbers[0]) + Integer.parseInt(numbers[1]));
+				message.setMessage(sum);
+				client.sendToClient(message);
 			}else{
 				//add code here to send received message to all clients.
 				//The string we received in the message is the message we will send back to all clients subscribed.
@@ -67,6 +121,9 @@ public class SimpleServer extends AbstractServer {
 					// message received: "Good morning"
 					// message sent: "Good morning"
 				//see code for changing submitters IDs for help
+				message.setMessage(request.toString());
+				client.sendToClient(message);
+
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -81,6 +138,17 @@ public class SimpleServer extends AbstractServer {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	public static String putNumbers(char[] exp, int F, int L)
+	{
+		char[] expReturn = new char[L-F+1];
+		for(int i = 0; i < L-F+1; i++)
+		{
+			expReturn[i] = exp[i+F];
+		}
+		String value = String.valueOf(expReturn);
+		return value;
 	}
 
 }
