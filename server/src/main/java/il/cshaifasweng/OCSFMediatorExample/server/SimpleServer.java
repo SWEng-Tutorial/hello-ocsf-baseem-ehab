@@ -68,6 +68,7 @@ public class SimpleServer extends AbstractServer {
 				//add code here to sum 2 numbers received in the message and send result back to client
 				//(use substring method as shown above)
 				//message format: "add n+m"
+				int b = 0;
 				String exp = request.toString();
 				char[] arr = new char[exp.length()];
 				String[] numbers = new String[2];
