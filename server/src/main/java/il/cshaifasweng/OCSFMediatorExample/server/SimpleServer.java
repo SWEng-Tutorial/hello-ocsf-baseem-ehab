@@ -114,7 +114,6 @@ public class SimpleServer extends AbstractServer {
 				sum = String.valueOf(Integer.parseInt(numbers[0]) + Integer.parseInt(numbers[1]));
 				message.setMessage(sum);
 				client.sendToClient(message);
-
 			}else{
 				//add code here to send received message to all clients.
 				//The string we received in the message is the message we will send back to all clients subscribed.
